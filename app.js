@@ -6,6 +6,8 @@ var handleError = require('handle-error-web');
 var listEmAll = require('list-em-all');
 var sb = require('standard-bail')();
 var request = require('basic-browser-request');
+var parseMap = require('./parse-map');
+var MakeSoul = request('./make-soul');
 
 var routeState;
 
@@ -51,5 +53,9 @@ function followRoute(routeDict) {
 function init(figureDefs, mapRes) {
   console.log(figureDefs);
   console.log(mapRes.rawResponse);
+  var makeSoul = MakeSoul({figureDefs: figureDefs});
+  parseMap({mapDef: mapRes.rawResponse, datumFromKeyFn: makeSoul})
+
+
   wireInput(PlayerResponder());
 }

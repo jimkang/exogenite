@@ -18,3 +18,6 @@ pushall:
 
 lint:
 	eslint .
+
+diagrams:
+	cat docs/soul-figure-relationship.dot | dot -Tpng -o docs/soul-figure-relationship.png

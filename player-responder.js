@@ -16,7 +16,6 @@ function PlayerResponder() {
 
   function onUp() {
     console.log('up');
-
   }
 
   function onDown() {

@@ -18,14 +18,15 @@ var mapDef = `..................
 test('Parse that map!', parseTest);
 
 function parseTest(t) {
-  var treeItems = parseMap({mapDef: mapDef, datumFromKeyFn: simpleDatum});
+  var treeItems = parseMap({mapDef: mapDef, makeSoul: simpleSoul});
   // console.log(JSON.stringify(treeItems, null, '  '));
   t.deepEqual(treeItems, expectedItems, 'Parsed items are correct.');
   t.end();
 }
 
-function simpleDatum(key) {
+function simpleSoul({key, figureBase}) {
   return {
-    key: key
+    key: key,
+    figures: [figureBase]
   };
 }
