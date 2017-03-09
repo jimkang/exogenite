@@ -1,0 +1,45 @@
+digraph {
+  subgraph cluster_souls {
+    label="Souls";
+    Soul -> chooseAction;
+    "Souls array" -> Soul;
+  };
+
+  subgraph cluster_figures {
+    label="Figures";
+    "Figure Tree" -> Figure;
+    Figure -> "position info"
+    Figure -> "contents rendering datum";
+    Figure -> Soul;
+    Soul -> Figure;
+    chooseAction -> "Figure Tree";
+  };
+
+  subgraph cluster_dm {
+    label="DM";
+    startTurn -> solicitActions;
+    solicitActions -> chooseAction;
+    startTurn -> executeActions;
+    executeActions -> Soul;
+  }
+
+  subgraph cluster_playerActionRouter {
+    label="playerActionRouter";
+    "player input" -> wireInput;
+    wireInput -> playerActionRouter;
+    playerActionRouter -> "Souls array";
+    playerActionRouter -> "Figure Tree";
+    playerActionRouter -> startTurn;
+  }
+
+  subgraph cluster_app {
+    label="app";
+    init -> "Souls array" [color=gray];
+    init -> "Figure Tree" [color=gray];
+    init -> wireInput [color=gray];
+    init -> playerActionRouter [color=gray];
+    "Rendering call" -> "field of view";
+    "Rendering call" -> "Figure Tree";
+    startTurn -> "Rendering call";
+  }
+}

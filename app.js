@@ -7,7 +7,8 @@ var listEmAll = require('list-em-all');
 var sb = require('standard-bail')();
 var request = require('basic-browser-request');
 var parseMap = require('./parse-map');
-var MakeSoul = request('./make-soul');
+var MakeSoul = require('./make-soul');
+var callNextTick = require('call-next-tick');
 
 var routeState;
 
@@ -54,7 +55,8 @@ function init(figureDefs, mapRes) {
   console.log(figureDefs);
   console.log(mapRes.rawResponse);
   var makeSoul = MakeSoul({figureDefs: figureDefs});
-  parseMap({mapDef: mapRes.rawResponse, datumFromKeyFn: makeSoul})
+  var souls = parseMap({mapDef: mapRes.rawResponse, makeSoul: makeSoul});
+  console.log(souls);
 
 
   wireInput(PlayerResponder());

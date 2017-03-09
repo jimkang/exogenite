@@ -1,4 +1,4 @@
--
+armored-beef:
   defname: armored-beef
   layer: 3
   groups:
@@ -61,7 +61,7 @@
       elements:
         - >
           <rect x="32" y="22" width="36" height="30" rx="10" ry="12"></rect>
--
+stone-tile:
   defname: stone-tile
   layer: 1
   groups:
