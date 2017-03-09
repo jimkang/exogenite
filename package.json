@@ -1,0 +1,42 @@
+{
+  "name": "exogenite",
+  "version": "1.0.0",
+  "description": "A roguelike game. My 2017 7DRL entry.",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jimkang/exogenite.git"
+  },
+  "keywords": [],
+  "author": "Jim Kang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimkang/exogenite/issues"
+  },
+  "homepage": "https://github.com/jimkang/exogenite",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^8.1.3",
+    "eslint": "^3.4.0",
+    "purify-css": "^1.1.9",
+    "tape": "^3.0.3",
+    "uglify-js": "^2.4.17"
+  },
+  "dependencies": {
+    "accessor": "^1.0.1",
+    "basic-browser-request": "^7.0.0",
+    "d3-queue": "^3.0.4",
+    "d3-selection": "^1.0.4",
+    "handle-error-web": "^1.0.1",
+    "list-em-all": "^1.2.0",
+    "lodash.groupby": "^4.6.0",
+    "qs": "^6.3.0",
+    "route-state": "^1.0.2",
+    "standard-bail": "^2.0.1",
+    "strokerouter": "^2.0.0"
+  }
+}
