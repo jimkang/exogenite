@@ -66,7 +66,7 @@ function RenderFigures({tileSize}) {
   function getFigureTransform(figure) {
     var transform = '';
 
-    if (figure.minX && figure.minY) {
+    if (!isNaN(figure.minX) && !isNaN(figure.minY)) {
       transform += `translate(${figure.minX * tileSize}, ${figure.minY * tileSize})`;
     }
     if (figure.rotation) {

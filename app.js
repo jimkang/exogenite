@@ -68,17 +68,19 @@ function init(figureDefs, mapDefs) {
   // TODO: Better way of find the player soul.
   var playerSoul = findWhere(souls, {key: 'p'});
   console.log('playerSoul', playerSoul);
+  var playerFigure = playerSoul.figures[0];
 
   var figureTree = rbush(9);
   var fieldOfView = {
-    minX: 6,
-    minY: 5,
-    maxX: 11,
-    maxY: 10
+    minX: playerFigure.minX - 1,
+    maxX: playerFigure.maxX + 1,
+    minY: playerFigure.minY - 1,
+    maxY: playerFigure.maxY + 1
   };
+  console.log('fieldOfView', fieldOfView);
 
   figureTree.load(flatten(pluck(souls, 'figures')));
-  renderVisible(figureTree, fieldOfView, playerSoul.figures[0]);
+  renderVisible(figureTree, fieldOfView, playerFigure);
 
   wireInput(PlayerResponder());
 
@@ -89,8 +91,11 @@ function init(figureDefs, mapDefs) {
 
 
 function renderVisible(figureTree, fieldOfView, playerFigure) {
+  var visibleFigures = figureTree.search(fieldOfView);
+  console.log('visibleFigures count:', visibleFigures.length);
+
   renderFigures({
-    figuresByLayer: groupBy(figureTree.search(fieldOfView), 'layer'),
+    figuresByLayer: groupBy(visibleFigures, 'layer'),
     viewCenterX: playerFigure.minX,
     viewCenterY: playerFigure.minY
   });
