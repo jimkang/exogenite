@@ -46,7 +46,7 @@ var threeSidesFigureTreeItems = [
 ];
 
 var figureTree = rbush(9);
-figureTree.load(threeSidesFigureTreeItems);
+figureTree.load(threeSidesFigureTreeItems.concat(playerSoul.figures));
 
 var canDoTestCases = [
   {
@@ -205,6 +205,7 @@ function runExecuteTest(testCase) {
         testCase.expectedActorPositions,
         'Actor figures\' positions are correct after executing.'
       );
+      // console.log(figureTree.toJSON());
       t.end();
     }
   }
