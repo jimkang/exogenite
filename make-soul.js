@@ -17,7 +17,8 @@ function MakeSoul({figureDefs}) {
     }
 
     var soul = {
-      key: key
+      key: key,
+      canDoAction: canDoAction
     };
     // TODO: Souls with multiple figures.
     soul.figures = [
@@ -30,9 +31,22 @@ function MakeSoul({figureDefs}) {
         figureBase
       )
     ];
-    // TODO: Available actions.
+
+    // TODO: Load this from a soul def.
+    soul.potentialActions = [];
+    if (key === 'p') {
+      soul.potentialActions.push('move');
+    }
 
     return soul;
+
+    function canDoAction(actionPack) {
+      if (soul.potentialActions.indexOf(actionPack.actionName) === -1) {
+        return false;
+      }
+      // TODO: See if action is possible with params, current situation.
+      return true;
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 var RouteState = require('route-state');
 var wireInput = require('./representers/wire-input');
-var PlayerResponder = require('./player-responder');
+var PlayerActionRouter = require('./player-action-router');
 var queue = require('d3-queue').queue;
 var handleError = require('handle-error-web');
 var listEmAll = require('list-em-all');
@@ -82,7 +82,7 @@ function init(figureDefs, mapDefs) {
   figureTree.load(flatten(pluck(souls, 'figures')));
   renderVisible(figureTree, fieldOfView, playerFigure);
 
-  wireInput(PlayerResponder());
+  wireInput(PlayerActionRouter(playerSoul));
 
   function parseMapShim(mapDef) {
     return parseMap({mapDef: mapDef, makeSoul: makeSoul});

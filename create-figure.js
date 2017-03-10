@@ -13,8 +13,8 @@ function createFigure({figureDef, soul, addVariance}) {
     // figure.rotation = probable.roll(360);
     setColors({
       figure: figure,
-      aMaxVariance: 80,
-      bMaxVariance: 80,
+      aMaxVariance: 100,
+      bMaxVariance: 50,
       lMaxVariance: 50
     });
   }

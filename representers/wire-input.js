@@ -1,17 +1,23 @@
 var Strokerouter = require('strokerouter');
 
-function wireInput({onLeft, onRight, onUp, onDown}) {
+function wireInput({onInput}) {
   var docStrokerouter = Strokerouter(document);
   // Single key routes.
-  docStrokerouter.routeKeyUp('leftArrow', null, onLeft);
-  docStrokerouter.routeKeyUp('rightArrow', null, onRight);
-  docStrokerouter.routeKeyUp('upArrow', null,  onUp);
-  docStrokerouter.routeKeyUp('downArrow', null, onDown);
+  docStrokerouter.routeKeyUp('leftArrow', null, CallOnInput('left'));
+  docStrokerouter.routeKeyUp('rightArrow', null, CallOnInput('right'));
+  docStrokerouter.routeKeyUp('upArrow', null,  CallOnInput('up'));
+  docStrokerouter.routeKeyUp('downArrow', null, CallOnInput('down'));
 
-  docStrokerouter.routeKeyUp('h', null,  onLeft);
-  docStrokerouter.routeKeyUp('l', null, onRight);
-  docStrokerouter.routeKeyUp('k', null,  onUp);
-  docStrokerouter.routeKeyUp('j', null, onDown);
+  docStrokerouter.routeKeyUp('h', null,  CallOnInput('left'));
+  docStrokerouter.routeKeyUp('l', null, CallOnInput('right'));
+  docStrokerouter.routeKeyUp('k', null,  CallOnInput('up'));
+  docStrokerouter.routeKeyUp('j', null, CallOnInput('down'));
+
+  function CallOnInput(inputName) {
+    return function callOnInput() {
+      onInput(inputName);
+    };
+  }
 }
 
 module.exports = wireInput;
