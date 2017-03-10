@@ -49,7 +49,8 @@ function followRoute(routeDict) {
   loadQueue.defer(listEmAll.loadList, {url: figureDefURL});
   
   if (routeDict.mapURL) {
-    loadQueue.defer(request, {url: routeDict.mapURL, method: 'GET'});
+    // loadQueue.defer(request, {url: routeDict.mapURL, method: 'GET'});
+    loadQueue.defer(listEmAll.loadList, {url: routeDict.mapURL});
   }
   else {
     loadQueue.defer(callNextTick);
@@ -58,11 +59,11 @@ function followRoute(routeDict) {
   loadQueue.await(sb(init, handleError));
 }
 
-function init(figureDefs, mapRes) {
+function init(figureDefs, mapDefs) {
   console.log(figureDefs);
-  console.log(mapRes.rawResponse);
+  console.log(mapDefs);
   var makeSoul = MakeSoul({figureDefs: figureDefs});
-  var souls = parseMap({mapDef: mapRes.rawResponse, makeSoul: makeSoul});
+  var souls = flatten(mapDefs.map(parseMapShim));
   console.log(souls);
   // TODO: Better way of find the player soul.
   var playerSoul = findWhere(souls, {key: 'p'});
@@ -79,6 +80,10 @@ function init(figureDefs, mapRes) {
   renderVisible(figureTree, fieldOfView, playerSoul.figures[0]);
 
   wireInput(PlayerResponder());
+
+  function parseMapShim(mapDef) {
+    return parseMap({mapDef: mapDef, makeSoul: makeSoul});
+  }
 }
 
 

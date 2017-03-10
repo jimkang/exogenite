@@ -12,7 +12,10 @@ function parseMap({mapDef, makeSoul}) {
         maxX: x + 1,
         maxY: y + 1,
       };
-      souls.push(makeSoul({key: line[x], figureBase: figureBase}));
+      var soul = makeSoul({key: line[x], figureBase: figureBase});
+      if (soul) {
+        souls.push(soul);
+      }
     }
   }
 

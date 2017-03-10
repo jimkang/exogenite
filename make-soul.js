@@ -2,7 +2,7 @@ var assign = require('lodash.assign');
 var createFigure = require('./create-figure');
 
 var figureKeysForMapKeys = {
-  '.': 'stone-tile',
+  't': 'stone-tile',
   'p': 'armored-beef',
   'g': 'armored-beef'
 };
@@ -11,6 +11,11 @@ function MakeSoul({figureDefs}) {
   return makeSoul;
 
   function makeSoul({key, figureBase}) {
+    var figureDef = figureDefs[figureKeysForMapKeys[key]];
+    if (!figureDef) {
+      return;
+    }
+
     var soul = {
       key: key
     };
@@ -18,7 +23,7 @@ function MakeSoul({figureDefs}) {
     soul.figures = [
       assign(
         createFigure({
-          figureDef: figureDefs[figureKeysForMapKeys[key]],
+          figureDef: figureDef,
           addVariance: true
         }),
         figureBase
