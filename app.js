@@ -39,15 +39,20 @@ function followRoute(routeDict) {
   }
 
   var figureDefURL = 'data/figure-defs.yaml';
+  var soulDefURL = 'data/soul-defs.yaml';
 
   var loadQueue = queue();
 
   if (routeDict.figureDefURL) {
     figureDefURL = routeDict.figureDefURL;
   }
-  
+  if (routeDict.soulDefURL) {
+    soulDefURL = routeDict.soulDefURL;
+  }
+
   loadQueue.defer(listEmAll.loadList, {url: figureDefURL});
-  
+  loadQueue.defer(listEmAll.loadList, {url: soulDefURL});
+
   if (routeDict.mapURL) {
     // loadQueue.defer(request, {url: routeDict.mapURL, method: 'GET'});
     loadQueue.defer(listEmAll.loadList, {url: routeDict.mapURL});
@@ -59,14 +64,14 @@ function followRoute(routeDict) {
   loadQueue.await(sb(init, handleError));
 }
 
-function init(figureDefs, mapDefs) {
+function init(figureDefs, soulDefs, mapDefs) {
   console.log(figureDefs);
   console.log(mapDefs);
-  var makeSoul = MakeSoul({figureDefs: figureDefs});
+  var makeSoul = MakeSoul({figureDefs: figureDefs, soulDefs: soulDefs});
   var souls = flatten(mapDefs.map(parseMapShim));
   console.log(souls);
-  // TODO: Better way of find the player soul.
-  var playerSoul = findWhere(souls, {key: 'p'});
+
+  var playerSoul = findWhere(souls, {defname: 'player'});
   console.log('playerSoul', playerSoul);
   var playerFigure = playerSoul.figures[0];
 
@@ -82,7 +87,7 @@ function init(figureDefs, mapDefs) {
   figureTree.load(flatten(pluck(souls, 'figures')));
   renderVisible(figureTree, fieldOfView, playerFigure);
 
-  wireInput(PlayerActionRouter(playerSoul));
+  wireInput(PlayerActionRouter(playerSoul, figureTree));
 
   function parseMapShim(mapDef) {
     return parseMap({mapDef: mapDef, makeSoul: makeSoul});

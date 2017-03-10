@@ -2,11 +2,12 @@ digraph {
   subgraph cluster_souls {
     label="Souls";
     chooseAction -> chooseActionOpts [color=blue4];
-    "Souls array" -> Soul;
+    "MakeSouls" -> Soul;
     Soul -> repertoire;
     chooseActions -> repertoire [color=blue4];
     getActionsForTurn -> chooseActions;
     chooseActions -> queuedActionsByTurn [color=blue4];
+    canDoAction;
   };
 
   subgraph cluster_actions {
@@ -19,13 +20,14 @@ digraph {
     execute -> canDo [color=blue4];
     Action -> canDo;
     canDo -> Soul [color=blue4];
-    Action -> optsDef;
-    chooseActionOpts -> optsDef [color=blue4];
+    chooseActionOpts -> canDo [color=blue4];
+    canDoAction -> canDo;
   }
 
   subgraph cluster_figures {
     label="Figures";
     "Figure Tree" -> Figure;
+    "MakeSouls" -> "Figure Tree";
     Figure -> "position info"
     Figure -> "contents rendering datum";
     Figure -> Soul;
@@ -44,16 +46,17 @@ digraph {
 
   subgraph cluster_playerActionRouter {
     label="playerActionRouter";
-    "player input" -> wireInput;
-    wireInput -> playerActionRouter;
-    playerActionRouter -> "Souls array";
+    "player input" -> wireInput [color=blue4];
+    wireInput -> playerActionRouter [color=blue4];
+    playerActionRouter -> canDoAction [color=blue4];
+    playerActionRouter -> Soul;
     playerActionRouter -> "Figure Tree";
-    playerActionRouter -> startTurn;
+    playerActionRouter -> startTurn [color=blue4];
   }
 
   subgraph cluster_app {
     label="app";
-    init -> "Souls array" [color=gray];
+    init -> "MakeSouls" [color=gray];
     init -> "Figure Tree" [color=gray];
     init -> wireInput [color=gray];
     init -> playerActionRouter [color=gray];

@@ -1,0 +1,45 @@
+p:
+  defname: player
+  repertoire:
+    moveLeft:
+      actionId: move
+      actionOpts:
+        vector: [-1, 0]
+    moveRight:
+      actionId: move
+      actionOpts:
+        vector: [1, 0]
+    moveUp:
+      actionId: move
+      actionOpts:
+        vector: [0, -1]
+    moveDown:
+      actionId: move
+      actionOpts:
+        vector: [0, 1]
+g:
+  defname: guy
+  repertoire:
+    moveLeft:
+      actionId: move
+      actionOpts:
+        vector: [-1, 0]
+    moveRight:
+      actionId: move
+      actionOpts:
+        vector: [1, 0]
+    moveUp:
+      actionId: move
+      actionOpts:
+        vector: [0, -1]
+    moveDown:
+      actionId: move
+      actionOpts:
+        vector: [0, 1]
+    moveRightDown:
+      actionId: move
+      actionOpts:
+        vector: [1, 1]
+t:
+  defname: floor-tile
+  repertoire: []

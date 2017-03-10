@@ -1,5 +1,8 @@
 var assign = require('lodash.assign');
 var createFigure = require('./create-figure');
+var cloneDeep = require('lodash.clonedeep');
+var actionMap = require('./actions/action-map');
+var callNextTick = require('call-next-tick');
 
 var figureKeysForMapKeys = {
   't': 'stone-tile',
@@ -7,7 +10,7 @@ var figureKeysForMapKeys = {
   'g': 'armored-beef'
 };
 
-function MakeSoul({figureDefs}) {
+function MakeSoul({figureDefs, soulDefs}) {
   return makeSoul;
 
   function makeSoul({key, figureBase}) {
@@ -16,11 +19,10 @@ function MakeSoul({figureDefs}) {
       return;
     }
 
-    var soul = {
-      key: key,
-      canDoAction: canDoAction
-    };
-    // TODO: Souls with multiple figures.
+    var soul = cloneDeep(soulDefs[key]);
+    soul.canDoAction = canDoAction;
+
+    // TODO: Souls with multiple figures from soulDef;
     soul.figures = [
       assign(
         createFigure({
@@ -32,7 +34,6 @@ function MakeSoul({figureDefs}) {
       )
     ];
 
-    // TODO: Load this from a soul def.
     soul.potentialActions = [];
     if (key === 'p') {
       soul.potentialActions.push('move');
@@ -40,12 +41,23 @@ function MakeSoul({figureDefs}) {
 
     return soul;
 
-    function canDoAction(actionPack) {
-      if (soul.potentialActions.indexOf(actionPack.actionName) === -1) {
-        return false;
+    function canDoAction({actionName, figureTree}, done) {
+      var actionSpec = soul.repertoire[actionName];
+
+      if (!actionSpec) {
+        callNextTick(done, null, false);
+        return;
       }
-      // TODO: See if action is possible with params, current situation.
-      return true;
+
+      var action = actionMap[actionSpec.actionId];
+      action.canDo(
+        {
+          actor: soul,
+          actionOpts: actionSpec.actionOpts,
+          figureTree: figureTree
+        },
+        done
+      );
     }
   }
 }
