@@ -24,7 +24,8 @@ function MakeSoul({figureDefs}) {
       assign(
         createFigure({
           figureDef: figureDef,
-          addVariance: true
+          addVariance: true,
+          soul: soul
         }),
         figureBase
       )

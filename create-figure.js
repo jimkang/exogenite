@@ -4,9 +4,10 @@ var cloneDeep = require('lodash.clonedeep');
 var d3Color = require('d3-color');
 var randomId = require('idmaker').randomId;
 
-function createFigure({figureDef, addVariance}) {
+function createFigure({figureDef, soul, addVariance}) {
   var figure = cloneDeep(figureDef);
   figure.id = 'figure-' + randomId(8);
+  figure.soul = soul;
 
   if (addVariance) {
     // figure.rotation = probable.roll(360);

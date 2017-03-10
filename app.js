@@ -67,6 +67,7 @@ function init(figureDefs, mapDefs) {
   console.log(souls);
   // TODO: Better way of find the player soul.
   var playerSoul = findWhere(souls, {key: 'p'});
+  console.log('playerSoul', playerSoul);
 
   var figureTree = rbush(9);
   var fieldOfView = {
