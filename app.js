@@ -9,8 +9,15 @@ var request = require('basic-browser-request');
 var parseMap = require('./parse-map');
 var MakeSoul = require('./make-soul');
 var callNextTick = require('call-next-tick');
+var RenderFigures = require('./representers/render-figures');
+var flatten = require('lodash.flatten');
+var pluck = require('lodash.pluck');
+var groupBy = require('lodash.groupby');
+var rbush = require('rbush');
+var findWhere = require('lodash.findwhere');
 
 var routeState;
+var renderFigures = RenderFigures({tileSize: 100});
 
 ((function go() {
   routeState = RouteState({
@@ -57,7 +64,28 @@ function init(figureDefs, mapRes) {
   var makeSoul = MakeSoul({figureDefs: figureDefs});
   var souls = parseMap({mapDef: mapRes.rawResponse, makeSoul: makeSoul});
   console.log(souls);
+  // TODO: Better way of find the player soul.
+  var playerSoul = findWhere(souls, {key: 'p'});
 
+  var figureTree = rbush(9);
+  var fieldOfView = {
+    minX: 6,
+    minY: 5,
+    maxX: 11,
+    maxY: 10
+  };
+
+  figureTree.load(flatten(pluck(souls, 'figures')));
+  renderVisible(figureTree, fieldOfView, playerSoul.figures[0]);
 
   wireInput(PlayerResponder());
+}
+
+
+function renderVisible(figureTree, fieldOfView, playerFigure) {
+  renderFigures({
+    figuresByLayer: groupBy(figureTree.search(fieldOfView), 'layer'),
+    viewCenterX: playerFigure.minX,
+    viewCenterY: playerFigure.minY
+  });
 }

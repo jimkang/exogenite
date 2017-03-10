@@ -41,5 +41,6 @@ digraph {
     "Rendering call" -> "field of view";
     "Rendering call" -> "Figure Tree";
     startTurn -> "Rendering call";
+    executeActions -> "field of view";
   }
 }

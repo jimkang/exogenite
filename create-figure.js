@@ -2,10 +2,12 @@
 var probable = require('probable');
 var cloneDeep = require('lodash.clonedeep');
 var d3Color = require('d3-color');
+var randomId = require('idmaker').randomId;
 
 function createFigure({figureDef, addVariance}) {
   var figure = cloneDeep(figureDef);
-  // TODO: Add id.
+  figure.id = 'figure-' + randomId(8);
+
   if (addVariance) {
     // figure.rotation = probable.roll(360);
     setColors({

@@ -3,52 +3,80 @@ var range = require('d3-array').range;
 var accessor = require('accessor');
 var GetPropertySafely = require('./get-property-safely');
 
-var getName = accessor('defname');
+var getId = accessor();
+// var getName = accessor('defname');
 var getElementsHTML = accessor('elements');
 var getGroups = accessor('groups');
 var getGroupname = accessor('groupname');
 var getColor = GetPropertySafely('color', 'hsl(0, 0%, 50%)');
 
-function renderFigures(figuresByLayer) {
+function RenderFigures({tileSize}) {
+  var panRoot = d3.select('#pan-root');
   var board = d3.select('#board');
+  
+  const halfBoardWidth = board.attr('width')/2;
+  const halfBoardHeight = board.attr('height')/2;
 
-  // TODO: Layer rendering could be done once and moved out into another function.
   renderLayers(range(10));
 
-  for (var layer in figuresByLayer) {
-    renderFigureOntoLayer(board, layer, figuresByLayer[layer]);
+  return renderFigures;
+
+  function renderFigures({figuresByLayer, viewCenterX, viewCenterY}) {
+    for (var layer in figuresByLayer) {
+      renderFigureOntoLayer(layer, figuresByLayer[layer]);
+    }
+
+    panRoot.attr(
+      'transform',
+      `translate(${-viewCenterX  * tileSize + halfBoardWidth},
+        ${-viewCenterY * tileSize + halfBoardHeight})`
+    );   
   }
-}
 
-function renderFigureOntoLayer(board, layer, figureData) {
-  var figures = board.select('#' + prefixIndex(layer)).selectAll('.figure')
-    // When doing this in the actual app, use the instance's 'id', not defname, as the key.
-    .data(figureData, getName);
+  function renderFigureOntoLayer(layer, figureData) {
+    var figures = panRoot.select('#' + prefixIndex(layer)).selectAll('.figure')
+      .data(figureData, getId);
 
-  figures.exit().remove();
-  var figuresToUpdate = figures.enter().append('g')
-    .classed('figure', true)
-    .merge(figures);
+    figures.exit().remove();
+    var figuresToUpdate = figures.enter().append('g')
+      .classed('figure', true)
+      .merge(figures);
 
-  figuresToUpdate.attr('transform', getFigureTransform);
+    figuresToUpdate.attr('transform', getFigureTransform);
 
-  var figGroups = figuresToUpdate.selectAll('.figure-group')
-    .data(getGroups, getGroupname);
+    var figGroups = figuresToUpdate.selectAll('.figure-group')
+      .data(getGroups, getGroupname);
 
-  figGroups.exit().remove();
-  figGroups.enter().append('g')
-    .merge(figGroups)
-    .attr('class', getFigureGroupClasses)
-    .attr('fill', getColor)
-    .html(getElementsHTML);
-}
+    figGroups.exit().remove();
+    figGroups.enter().append('g')
+      .merge(figGroups)
+      .attr('class', getFigureGroupClasses)
+      .attr('fill', getColor)
+      .html(getElementsHTML);
+  }
 
-function renderLayers(layerIndexes) {
-  var layers = d3.select('#board').selectAll('g').data(layerIndexes);
-  layers.exit().remove();
-  layers
-    .enter().append('g')
-    .merge(layers).attr('id', prefixIndex);
+  function renderLayers(layerIndexes) {
+    var layers = panRoot.selectAll('g').data(layerIndexes);
+    layers.exit().remove();
+    layers
+      .enter().append('g')
+      .merge(layers).attr('id', prefixIndex);
+  }
+
+  function getFigureTransform(figure) {
+    var transform = '';
+
+    if (figure.minX && figure.minY) {
+      transform += `translate(${figure.minX * tileSize}, ${figure.minY * tileSize})`;
+    }
+    if (figure.rotation) {
+      if (transform.length > 0) {
+        transform += ' ';
+      }
+      transform += `rotate(${figure.rotation}, 50, 50)`;
+    }
+    return transform;
+  }
 }
 
 function prefixIndex(index) {
@@ -63,19 +91,4 @@ function getFigureGroupClasses(figure) {
   return classes.join(' ');
 }
 
-function getFigureTransform(figure) {
-  var transform = '';
-
-  if (figure.position) {
-    transform += `translate(${figure.position[0]}, ${figure.position[1]})`;
-  }
-  if (figure.rotation) {
-    if (transform.length > 0) {
-      transform += ' ';
-    }
-    transform += `rotate(${figure.rotation}, 50, 50)`;
-  }
-  return transform;
-}
-
-module.exports = renderFigures;
+module.exports = RenderFigures;
