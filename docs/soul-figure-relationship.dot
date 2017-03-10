@@ -1,9 +1,27 @@
 digraph {
   subgraph cluster_souls {
     label="Souls";
-    Soul -> chooseAction;
+    chooseAction -> chooseActionOpts [color=blue4];
     "Souls array" -> Soul;
+    Soul -> repertoire;
+    chooseActions -> repertoire [color=blue4];
+    getActionsForTurn -> chooseActions;
+    chooseActions -> queuedActionsByTurn [color=blue4];
   };
+
+  subgraph cluster_actions {
+    label="Actions";
+    repertoire -> Action;
+    queuedActionsByTurn -> Action;
+    Action -> execute;
+    execute -> Soul [color=blue4];
+    chooseActions -> canDo [color=blue4];
+    execute -> canDo [color=blue4];
+    Action -> canDo;
+    canDo -> Soul [color=blue4];
+    Action -> optsDef;
+    chooseActionOpts -> optsDef [color=blue4];
+  }
 
   subgraph cluster_figures {
     label="Figures";
@@ -18,9 +36,10 @@ digraph {
   subgraph cluster_dm {
     label="DM";
     startTurn -> solicitActions;
-    solicitActions -> chooseAction;
-    startTurn -> executeActions;
-    executeActions -> Soul;
+    solicitActions -> getActionsForTurn [color=blue4];
+    startTurn -> executeActions [color=blue4];
+    executeActions -> Soul [color=blue4];
+    executeActions -> execute [color=blue4];
   }
 
   subgraph cluster_playerActionRouter {
@@ -43,4 +62,11 @@ digraph {
     startTurn -> "Rendering call";
     executeActions -> "field of view";
   }
+
+   subgraph cluster_legend {
+    label="Legend";
+    gray -> creates [color=gray];
+    black -> has;
+    blue4 -> uses [color=blue4];
+   }
 }
