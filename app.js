@@ -15,6 +15,9 @@ var pluck = require('lodash.pluck');
 var groupBy = require('lodash.groupby');
 var rbush = require('rbush');
 var findWhere = require('lodash.findwhere');
+var SoulPool = require('./soul-pool');
+var RunTurn = require('./run-turn');
+var SoulOps = require('./soul-ops');
 
 var routeState;
 var renderFigures = RenderFigures({tileSize: 100});
@@ -73,6 +76,7 @@ function init(figureDefs, soulDefs, mapDefs) {
 
   var playerSoul = findWhere(souls, {defname: 'player'});
   console.log('playerSoul', playerSoul);
+  var soulPool = SoulPool(souls);
   var playerFigure = playerSoul.figures[0];
 
   var figureTree = rbush(9);
@@ -85,12 +89,28 @@ function init(figureDefs, soulDefs, mapDefs) {
   console.log('fieldOfView', fieldOfView);
 
   figureTree.load(flatten(pluck(souls, 'figures')));
-  renderVisible(figureTree, fieldOfView, playerFigure);
+  render();
 
-  wireInput(PlayerActionRouter(playerSoul, figureTree));
+  var soulOps = SoulOps({figureTree: figureTree, fieldOfView: fieldOfView});
+
+  var runTurn = RunTurn({soulPool: soulPool, soulOps: soulOps});
+
+  var playerActionRouter = PlayerActionRouter({
+    playerSoul: playerSoul,
+    figureTree: figureTree,
+    runTurn: runTurn,
+    soulOps: soulOps,
+    onTurnComplete: render
+  });
+
+  wireInput(playerActionRouter);
 
   function parseMapShim(mapDef) {
     return parseMap({mapDef: mapDef, makeSoul: makeSoul});
+  }
+
+  function render() {
+    renderVisible(figureTree, fieldOfView, playerFigure);
   }
 }
 

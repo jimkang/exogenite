@@ -6,13 +6,13 @@ function parseMap({mapDef, makeSoul}) {
     let line = lines[y];
 
     for (let x = 0; x < line.length; ++x) {
-      var figureBase = {
+      var baseLocation = {
         minX: x,
         minY: y,
         maxX: x + 1,
         maxY: y + 1,
       };
-      var soul = makeSoul({key: line[x], figureBase: figureBase});
+      var soul = makeSoul({key: line[x], baseLocation: baseLocation});
       if (soul) {
         souls.push(soul);
       }

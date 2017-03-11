@@ -31,7 +31,9 @@ function setColors({figure, aMaxVariance, bMaxVariance, lMaxVariance}) {
   var aVariance = probable.roll(aMaxVariance);
   var bVariance = probable.roll(bMaxVariance);
 
-  figure.groups.forEach(setGroupColor);
+  if (figure.groups) {
+    figure.groups.forEach(setGroupColor);
+  }
 
   function setGroupColor(group) {
     group.color = formatLAB(varyColor(baseColor, lVariance, aVariance, bVariance));

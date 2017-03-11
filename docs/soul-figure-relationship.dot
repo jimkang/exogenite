@@ -2,12 +2,13 @@ digraph {
   subgraph cluster_souls {
     label="Souls";
     chooseAction -> chooseActionOpts [color=blue4];
-    "MakeSouls" -> Soul;
+    "MakeSouls" -> Soul [color=gray];
+    SoulPool -> Soul;
     Soul -> repertoire;
-    chooseActions -> repertoire [color=blue4];
-    getActionsForTurn -> chooseActions;
-    chooseActions -> queuedActionsByTurn [color=blue4];
-    canDoAction;
+    soulOps -> canDoAction;
+    soulOps -> queueAction;
+    soulOps -> takeTurn;
+    takeTurn -> repertoire [color=blue4];
   };
 
   subgraph cluster_actions {
@@ -26,21 +27,25 @@ digraph {
 
   subgraph cluster_figures {
     label="Figures";
-    "Figure Tree" -> Figure;
-    "MakeSouls" -> "Figure Tree";
+    figureTree -> Figure;
+    "MakeSouls" -> figureTree;
+    soulOps -> figureTree;
     Figure -> "position info"
     Figure -> "contents rendering datum";
     Figure -> Soul;
     Soul -> Figure;
-    chooseAction -> "Figure Tree";
+    chooseAction -> figureTree;
   };
 
   subgraph cluster_dm {
     label="DM";
-    startTurn -> solicitActions;
+    runTurn -> solicitActions [color=blue4];
+    runTurn -> SoulPool [color=blue4];
+    runTurn -> soulOps;
     solicitActions -> getActionsForTurn [color=blue4];
-    startTurn -> executeActions [color=blue4];
+    runTurn -> executeActions [color=blue4];
     executeActions -> Soul [color=blue4];
+    executeActions -> SoulPool [color=blue4];
     executeActions -> execute [color=blue4];
   }
 
@@ -50,20 +55,23 @@ digraph {
     wireInput -> playerActionRouter [color=blue4];
     playerActionRouter -> canDoAction [color=blue4];
     playerActionRouter -> Soul;
-    playerActionRouter -> "Figure Tree";
-    playerActionRouter -> startTurn [color=blue4];
+    playerActionRouter -> runTurn [color=blue4];
+    playerActionRouter -> soulOps;
   }
 
   subgraph cluster_app {
     label="app";
-    init -> "MakeSouls" [color=gray];
-    init -> "Figure Tree" [color=gray];
+    init -> SoulPool [color=gray];
+    init -> figureTree [color=gray];
     init -> wireInput [color=gray];
-    init -> playerActionRouter [color=gray];
-    "Rendering call" -> "field of view";
-    "Rendering call" -> "Figure Tree";
-    startTurn -> "Rendering call";
-    executeActions -> "field of view";
+    init -> runTurn [color=gray, label="souls, figureTree"];
+    init -> playerActionRouter [color=gray, label="runTurn, render"];
+    init -> soulOps [color=gray, label="fieldOfView, figureTree"];
+    render -> fieldOfView;
+    render -> figureTree;
+    playerActionRouter -> render [color=blue4];
+    startTurn -> render;
+    soulOps -> fieldOfView;
   }
 
    subgraph cluster_legend {

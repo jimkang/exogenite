@@ -24,9 +24,9 @@ function parseTest(t) {
   t.end();
 }
 
-function simpleSoul({key, figureBase}) {
+function simpleSoul({key, baseLocation}) {
   return {
     key: key,
-    figures: [figureBase]
+    figures: [baseLocation]
   };
 }

@@ -28,7 +28,7 @@ function canDoMove({actor, actionOpts, figureTree}, done) {
   }
 }
 
-function executeMove({actor, actionOpts, figureTree}, done) {
+function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
   canDoMove({actor, actionOpts, figureTree}, sb(execute, done));
 
   function execute(isDoable) {
@@ -37,6 +37,7 @@ function executeMove({actor, actionOpts, figureTree}, done) {
     }
     else {
       actor.figures.forEach(updatePosition);
+      updatePosition(fieldOfView);
       done(null, true);
     }
   }

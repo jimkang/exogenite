@@ -18,6 +18,13 @@ var playerSoul = {
   ]
 };
 
+var fieldOfView = {
+  minX: 8,
+  maxX: 11,
+  minY: 3,
+  maxY: 6
+};
+
 var threeSidesFigureTreeItems = [
   {
     id: 'above',
@@ -103,7 +110,8 @@ var executeTestCases = [
       actionOpts: {
         vector: [-1, 0]
       },
-      figureTree: figureTree
+      figureTree: figureTree,
+      fieldOfView: fieldOfView
     },
     expectedResult: true,
     expectedActorPositions: [
@@ -113,7 +121,13 @@ var executeTestCases = [
         minY: 4,
         maxY: 5
       }
-    ]
+    ],
+    expectedFieldOfView: {
+      minX: 7,
+      maxX: 10,
+      minY: 3,
+      maxY: 6
+    }
   },
   {
     name: 'Move right',
@@ -122,7 +136,8 @@ var executeTestCases = [
       actionOpts: {
         vector: [1, 0]
       },
-      figureTree: figureTree
+      figureTree: figureTree,
+      fieldOfView: fieldOfView
     },
     expectedResult: true,
     expectedActorPositions: [
@@ -132,7 +147,13 @@ var executeTestCases = [
         minY: 4,
         maxY: 5
       }
-    ]
+    ],
+    expectedFieldOfView: {
+      minX: 8,
+      maxX: 11,
+      minY: 3,
+      maxY: 6
+    }
   },
   {
     name: 'Move up',
@@ -141,7 +162,8 @@ var executeTestCases = [
       actionOpts: {
         vector: [0, -1]
       },
-      figureTree: figureTree
+      figureTree: figureTree,
+      fieldOfView: fieldOfView
     },
     expectedResult: false,
     expectedActorPositions: [
@@ -151,7 +173,13 @@ var executeTestCases = [
         minY: 4,
         maxY: 5
       }
-    ]
+    ],
+    expectedFieldOfView: {
+      minX: 8,
+      maxX: 11,
+      minY: 3,
+      maxY: 6
+    }
   },
   {
     name: 'Move down',
@@ -160,7 +188,8 @@ var executeTestCases = [
       actionOpts: {
         vector: [0, 1]
       },
-      figureTree: figureTree
+      figureTree: figureTree,
+      fieldOfView: fieldOfView
     },
     expectedResult: true,
     expectedActorPositions: [
@@ -170,7 +199,13 @@ var executeTestCases = [
         minY: 5,
         maxY: 6
       }
-    ]
+    ],
+    expectedFieldOfView: {
+      minX: 8,
+      maxX: 11,
+      minY: 4,
+      maxY: 7
+    }
   }
 ];
 
@@ -204,6 +239,11 @@ function runExecuteTest(testCase) {
         testCase.opts.actor.figures.map(f => pick(f, 'minX', 'maxX', 'minY', 'maxY')),
         testCase.expectedActorPositions,
         'Actor figures\' positions are correct after executing.'
+      );
+      t.deepEqual(
+        fieldOfView,
+        testCase.expectedFieldOfView,
+        'Field of view is correct after executing.'
       );
       // console.log(figureTree.toJSON());
       t.end();

@@ -8,9 +8,7 @@ var actionNamesForInputNames = {
   down: 'moveDown'
 };
 
-function PlayerActionRouter(playerSoul, figureTree) {
-  // TODO: Consider whether the figureTree should be here, or if there's a way 
-  // to get something else to hold onto it and ask the player soul what to do, e.g. DM object.
+function PlayerActionRouter({playerSoul, runTurn, soulOps, onTurnComplete}) {
   return {
     onInput: onInput
   };
@@ -18,21 +16,26 @@ function PlayerActionRouter(playerSoul, figureTree) {
   function onInput(inputName) {
     var actionName = actionNamesForInputNames[inputName];
     console.log(actionName);
-    if (actionName) {      
-      playerSoul.canDoAction(
+    if (actionName) {
+      soulOps.canDoAction(
         {
-          actionName: actionName,
-          figureTree: figureTree
+          soul: playerSoul,
+          actionName: actionName
         },
         sb(decideOnAction, handleError)
       );
     }
-  }
 
-  function decideOnAction(canDoAction) {
-    if (canDoAction) {
-      console.log('Player can do this!');
-      // then, kick off the turn!      
+    function decideOnAction(canDoAction) {
+      if (canDoAction) {
+        console.log('Player can do this!');
+        soulOps.queueAction({
+          actionName: actionName,
+          soul: playerSoul
+        });
+
+        runTurn(sb(onTurnComplete, handleError));
+      }
     }
   }
 }

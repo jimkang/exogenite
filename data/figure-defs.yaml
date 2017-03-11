@@ -1,6 +1,7 @@
 armored-beef:
   defname: armored-beef
   layer: 3
+  passable: false
   groups:
     -
       groupname: feet
@@ -64,6 +65,7 @@ armored-beef:
 stone-tile:
   defname: stone-tile
   layer: 1
+  passable: true
   groups:
     -
       groupname: tile
