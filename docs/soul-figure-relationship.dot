@@ -59,6 +59,14 @@ digraph {
     playerActionRouter -> soulOps;
   }
 
+  subgraph cluster_render {
+    label="render";
+    render -> fieldOfView;
+    render -> figureTree;
+    render -> onFigureClicked [color=blue4];
+    playerActionRouter -> onFigureClicked;    
+  }
+
   subgraph cluster_app {
     label="app";
     init -> SoulPool [color=gray];
@@ -67,8 +75,6 @@ digraph {
     init -> runTurn [color=gray, label="souls, figureTree"];
     init -> playerActionRouter [color=gray, label="runTurn, render"];
     init -> soulOps [color=gray, label="fieldOfView, figureTree"];
-    render -> fieldOfView;
-    render -> figureTree;
     playerActionRouter -> render [color=blue4];
     startTurn -> render;
     soulOps -> fieldOfView;

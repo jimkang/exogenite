@@ -20,7 +20,7 @@ var RunTurn = require('./run-turn');
 var SoulOps = require('./soul-ops');
 
 var routeState;
-var renderFigures = RenderFigures({tileSize: 100});
+var renderFigures;
 
 ((function go() {
   routeState = RouteState({
@@ -89,7 +89,6 @@ function init(figureDefs, soulDefs, mapDefs) {
   console.log('fieldOfView', fieldOfView);
 
   figureTree.load(flatten(pluck(souls, 'figures')));
-  render();
 
   var soulOps = SoulOps({figureTree: figureTree, fieldOfView: fieldOfView});
 
@@ -102,6 +101,13 @@ function init(figureDefs, soulDefs, mapDefs) {
     soulOps: soulOps,
     onTurnComplete: render
   });
+
+  renderFigures = RenderFigures({
+    tileSize: 100,
+    onFigureClicked: playerActionRouter.onFigureClicked
+  });
+
+  render();
 
   wireInput(playerActionRouter);
 

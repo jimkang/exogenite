@@ -1,4 +1,5 @@
 var Strokerouter = require('strokerouter');
+var callNextTick = require('call-next-tick');
 
 function wireInput({onInput}) {
   var docStrokerouter = Strokerouter(document);
@@ -15,7 +16,7 @@ function wireInput({onInput}) {
 
   function CallOnInput(inputName) {
     return function callOnInput() {
-      onInput(inputName);
+      callNextTick(onInput, inputName);
     };
   }
 }

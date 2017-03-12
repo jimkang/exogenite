@@ -10,7 +10,7 @@ var getGroups = accessor('groups');
 var getGroupname = accessor('groupname');
 var getColor = GetPropertySafely('color', 'hsl(0, 0%, 50%)');
 
-function RenderFigures({tileSize}) {
+function RenderFigures({tileSize, onFigureClicked}) {
   var panRoot = d3.select('#pan-root');
   var board = d3.select('#board');
   
@@ -40,6 +40,7 @@ function RenderFigures({tileSize}) {
     figures.exit().remove();
     var figuresToUpdate = figures.enter().append('g')
       .classed('figure', true)
+      .on('click', onFigureClicked)
       .merge(figures);
 
     figuresToUpdate.attr('transform', getFigureTransform);

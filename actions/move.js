@@ -37,6 +37,8 @@ function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
     }
     else {
       actor.figures.forEach(updatePosition);
+      actor.figures.forEach(updateRotation);
+      // TODO: Why does the player disappear when they go near the left edge of the map?
       updatePosition(fieldOfView);
       done(null, true);
     }
@@ -47,6 +49,22 @@ function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
     figure.maxX += actionOpts.vector[0];
     figure.minY += actionOpts.vector[1];
     figure.maxY += actionOpts.vector[1];
+  }
+
+  function updateRotation(figure) {
+    var v = actionOpts.vector;
+    if (v[0] > 0 && v[1] === 0) {
+      figure.rotation = -90;
+    }
+    else if (v[0] < 0 && v[1] === 0) {
+      figure.rotation = 90;
+    }
+    else if (v[0] === 0 && v[1] < 0) {
+      figure.rotation = 180;
+    }
+    else {
+      figure.rotation = 0;
+    }
   }
 }
 
