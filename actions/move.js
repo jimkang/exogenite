@@ -2,6 +2,8 @@ var callNextTick = require('call-next-tick');
 var flatten = require('lodash.flatten');
 var findWhere = require('lodash.findwhere');
 var sb = require('standard-bail')();
+var makeFieldOfViewAroundFigure = require('../make-field-of-view-around-figure');
+var assign = require('lodash.assign');
 
 var move = {
   canDo: canDoMove,
@@ -39,7 +41,15 @@ function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
       actor.figures.forEach(updatePosition);
       actor.figures.forEach(updateRotation);
       // TODO: Why does the player disappear when they go near the left edge of the map?
-      updatePosition(fieldOfView);
+      // TODO: Use a composite figure built from all of the figures to make the field of
+      // view instead of just the first figure.
+      assign(fieldOfView, makeFieldOfViewAroundFigure(actor.figures[0]));
+
+      // Update the search tree's indexes with the new position.
+      actor.figures.forEach(figureTree.remove.bind(figureTree));
+      actor.figures.forEach(figureTree.insert.bind(figureTree));
+
+      console.log('moved: self', actor.figures[0], 'fieldOfView', fieldOfView);
       done(null, true);
     }
   }

@@ -18,6 +18,7 @@ var findWhere = require('lodash.findwhere');
 var SoulPool = require('./soul-pool');
 var RunTurn = require('./run-turn');
 var SoulOps = require('./soul-ops');
+var makeFieldOfViewAroundFigure = require('./make-field-of-view-around-figure');
 
 var routeState;
 var renderFigures;
@@ -80,12 +81,7 @@ function init(figureDefs, soulDefs, mapDefs) {
   var playerFigure = playerSoul.figures[0];
 
   var figureTree = rbush(9);
-  var fieldOfView = {
-    minX: playerFigure.minX - 1,
-    maxX: playerFigure.maxX + 1,
-    minY: playerFigure.minY - 1,
-    maxY: playerFigure.maxY + 1
-  };
+  var fieldOfView = makeFieldOfViewAroundFigure(playerFigure);
   console.log('fieldOfView', fieldOfView);
 
   figureTree.load(flatten(pluck(souls, 'figures')));
@@ -123,7 +119,13 @@ function init(figureDefs, soulDefs, mapDefs) {
 
 function renderVisible(figureTree, fieldOfView, playerFigure) {
   var visibleFigures = figureTree.search(fieldOfView);
-  console.log('visibleFigures count:', visibleFigures.length);
+  // console.log('visibleFigures count:', visibleFigures.length, 'in', fieldOfView);
+  // console.log(visibleFigures);
+  // if (!visibleFigures.some(isPlayerFigure)) {
+  //   let pf;
+  //   figureTree.all().forEach(f => {if (f.soul.defname === 'player') { pf = f; }})
+  //   debugger;
+  // }
 
   renderFigures({
     figuresByLayer: groupBy(visibleFigures, 'layer'),
@@ -131,3 +133,9 @@ function renderVisible(figureTree, fieldOfView, playerFigure) {
     viewCenterY: playerFigure.minY
   });
 }
+
+// function isPlayerFigure(figure) {
+//   if (figure.soul.defname === 'player') {
+//     return figure;
+//   }
+// }
