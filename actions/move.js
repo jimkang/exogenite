@@ -43,7 +43,7 @@ function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
       // TODO: Why does the player disappear when they go near the left edge of the map?
       // TODO: Use a composite figure built from all of the figures to make the field of
       // view instead of just the first figure.
-      assign(fieldOfView, makeFieldOfViewAroundFigure(actor.figures[0]));
+      assign(fieldOfView, getUpdatedFieldOfView(fieldOfView, actor.figures[0]));
 
       // Update the search tree's indexes with the new position.
       actor.figures.forEach(figureTree.remove.bind(figureTree));
@@ -75,6 +75,25 @@ function executeMove({actor, actionOpts, figureTree, fieldOfView}, done) {
     else {
       figure.rotation = 0;
     }
+  }
+}
+
+// If a figure is at a boundary of the field of view, it is still within the field of
+// view. That's the point at which we'll move the field of view.
+// e.g. If the field of view has minX 7.5 and maxX 11.5, a figure with 
+// minX 11 and maxY 12 will need the field of view to be moved.
+function getUpdatedFieldOfView(fieldOfView, figure) {
+  if (Math.abs(figure.minX - fieldOfView.maxX) < 1 ||
+    Math.abs(figure.maxX - fieldOfView.minX) < 1 ||
+    Math.abs(figure.minY - fieldOfView.maxY) < 1 ||
+    Math.abs(figure.maxY - fieldOfView.minY) < 1) {
+
+    // TODO: Shift field of view in the direction moved rather than
+    // recentering around the figure.
+    return makeFieldOfViewAroundFigure(figure);
+  }
+  else {
+    return fieldOfView;
   }
 }
 
