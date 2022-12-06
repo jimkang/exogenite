@@ -47,7 +47,7 @@
     "lodash.groupby": "^4.6.0",
     "lodash.pluck": "^3.1.2",
     "probable": "^2.1.1",
-    "qs": "^6.3.0",
+    "qs": "^6.9.7",
     "rbush": "^2.0.1",
     "route-state": "^1.0.2",
     "standard-bail": "^2.0.1",
